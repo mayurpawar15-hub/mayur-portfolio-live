@@ -1,6 +1,6 @@
-# Deploy mayurp.com — Cloudflare Pages
+# Deploy mayurp.com — Cloudflare
 
-Your stack: **GoDaddy** (registrar) · **Cloudflare** (DNS) · **GitHub** (files) · **Cloudflare Pages** (host — this guide).
+Your stack: **GoDaddy** (registrar) · **Cloudflare** (DNS) · **GitHub** (files) · **Cloudflare Workers** (host — this guide).
 Every future change goes live by doing `git push` — Cloudflare rebuilds automatically.
 
 ---
@@ -17,6 +17,8 @@ site/
 
 Only the `site/` folder gets published. Everything else in the repo (source file, screenshots, uploads) stays private.
 
+There's also a **`wrangler.jsonc`** at the repo root — it's the one-line config that tells Cloudflare Workers to serve the `site/` folder. Don't delete it.
+
 ---
 
 ## Step 1 — Push the files to GitHub
@@ -28,15 +30,15 @@ git commit -m "Prepare site for deploy: sticky nav + resume/og assets"
 git push
 ```
 
-## Step 2 — Create the Cloudflare Pages project
-1. Cloudflare dashboard → **Workers & Pages** → **Create** → **Pages** → **Connect to Git**.
-2. Authorize Cloudflare's GitHub app (first time only) and pick your repo.
-3. Set the build settings exactly:
-   - **Framework preset:** `None`
-   - **Build command:** *(leave empty)*
-   - **Build output directory:** `site`
-   - **Production branch:** `main`
-4. Click **Save and Deploy**.
+## Step 2 — Deploy (Workers flow — the screen you're on)
+Your repo `mayurpawar15-hub/mayur-portfolio-live` is connected in the **Workers** flow. That's fine — `wrangler.jsonc` handles the rest. On the "Set up your application" screen:
+- **Build command:** *(leave empty)*
+- **Deploy command:** `npx wrangler deploy`  ← leave as-is
+- Then click **Deploy**.
+
+(Make sure `wrangler.jsonc` was pushed in Step 1, or the deploy won't know what to serve.)
+
+> **No-config alternative (Pages):** click **Back** → choose **Pages** instead of Workers → **Connect to Git** → set **Build output directory = `site`** → **Save and Deploy**. Either path works — you only need one.
 
 ## Step 3 — Test on the free URL
 After ~1 minute you get a `https://<project>.pages.dev` link. Open it and check:
@@ -47,7 +49,8 @@ After ~1 minute you get a `https://<project>.pages.dev` link. Open it and check:
 *(On `.pages.dev` the Resume/photo work because they're relative to the site root — same as they will on your domain.)*
 
 ## Step 4 — Attach your domain
-1. In the Pages project → **Custom domains** → **Set up a domain**.
+1. Open your project → **Settings** → **Domains & Routes** → **Add** → **Custom domain**.
+   *(On the Pages path it's the **Custom domains** tab instead — same idea.)*
 2. Add `mayurp.com`, then repeat for `www.mayurp.com`.
 3. Because your DNS is already on Cloudflare, it **creates the DNS records and the HTTPS certificate automatically** — no manual A/CNAME records, no IP addresses. Give it a few minutes for the padlock to go green.
 

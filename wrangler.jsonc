@@ -1,0 +1,10 @@
+{
+  // Cloudflare Workers static-site config.
+  // Serves everything in the ./site folder as the website root.
+  // "/" -> site/index.html, "/files/resume.pdf", "/images/author/mayur.jpeg", etc.
+  "name": "mayur-portfolio-live",
+  "compatibility_date": "2026-06-23",
+  "assets": {
+    "directory": "./site"
+  }
+}

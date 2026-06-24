@@ -1,0 +1,3 @@
+# Force the resume PDF to download instead of opening in the browser.
+/files/resume.pdf
+  Content-Disposition: attachment; filename="Mayur-Pawar-SAP-FICO-Resume.pdf"
